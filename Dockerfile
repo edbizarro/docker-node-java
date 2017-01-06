@@ -72,9 +72,9 @@ RUN apk upgrade --update && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf
 
 
-ENV VERSION=v7.4.0 NPM_VERSION=4
+ENV VERSION=v7.4.0
 
-ENV CONFIG_FLAGS="--fully-static --without-npm" DEL_PKGS="libgcc libstdc++" RM_DIRS=/usr/include
+ENV CONFIG_FLAGS="--fully-static" DEL_PKGS="libgcc libstdc++" RM_DIRS=/usr/include
 
 RUN apk add --no-cache curl make gcc g++ python linux-headers paxctl libgcc libstdc++ gnupg && \
 		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
@@ -102,7 +102,8 @@ RUN apk add --no-cache curl make gcc g++ python linux-headers paxctl libgcc libs
 		paxctl -cm /usr/bin/node && \
 		cd / && \
 		if [ -x /usr/bin/npm ]; then \
-		  npm install -g npm@${NPM_VERSION} && \
+		  npm install -g npm && \
+      npm install -g yarn && \
 		  find /usr/lib/node_modules/npm -name test -o -name .bin -type d | xargs rm -rf; \
 		fi && \
 		apk del curl make gcc g++ python linux-headers paxctl gnupg ${DEL_PKGS} && \
